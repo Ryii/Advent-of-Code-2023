@@ -1,3 +1,5 @@
+import math
+
 def getSteps():
   f = open("input.txt", "r")
   lines = f.read().splitlines()
@@ -29,7 +31,7 @@ def getSteps():
 
 def getGhostSteps():
   f = open("input.txt", "r")
-  lines = f.read().splitlines()
+  lines = f.read().strip().splitlines()
 
   path = lines[0]
   nodeLines = lines[2:]
@@ -43,25 +45,23 @@ def getGhostSteps():
     if node.endswith('A'):
       nodes.append(node)
 
-  end = False
-  steps = 0
-  pathIndex = 0
+  total = 1
 
-  while not end and steps < 1000:
-    if pathIndex == len(path):
-      pathIndex = 0
+  for node in nodes:
+    steps = 0
+    pathIndex = 0
 
-    for i, node in enumerate(nodes):
-      nodes[i] = pathMap[node][0] if path[pathIndex] == 'L' else pathMap[node][1]
+    while not node.endswith('Z'):
+      if pathIndex == len(path):
+        pathIndex = 0
 
-    steps += 1
-    pathIndex += 1
+      node = pathMap[node][0] if path[pathIndex] == 'L' else pathMap[node][1]
 
-    print(nodes)
+      steps += 1
+      pathIndex += 1
 
-    if all(node.endswith('Z') for node in nodes):
-      end = True
+    total = math.lcm(steps, total)
 
-  return steps
+  return total
 
 print(getGhostSteps())
